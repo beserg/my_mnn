@@ -1,29 +1,34 @@
-# 🦙 Llama Chat - Android App with MNN Inference
+# 🤖 Multi-Model Chat - Android App with MNN Inference
 
-A high-performance Android chat application featuring **Meta Llama-3.2-1B** running locally on **Samsung Galaxy S24 Ultra** using the **MNN inference framework**.
+A high-performance Android chat application featuring **Meta Llama-3.2-1B** and **YandexGPT-5-Lite-8B** running locally on **Samsung Galaxy S24 Ultra** using the **MNN inference framework**.
 
 ![Android](https://img.shields.io/badge/Android-15-green.svg)
 ![MNN](https://img.shields.io/badge/MNN-Framework-blue.svg)
 ![Llama](https://img.shields.io/badge/Llama--3.2--1B-Meta-red.svg)
+![YandexGPT](https://img.shields.io/badge/YandexGPT--5--Lite--8B-Yandex-orange.svg)
 ![Galaxy S24](https://img.shields.io/badge/Galaxy%20S24%20Ultra-Tested-purple.svg)
 
 ## 🎯 Project Overview
 
 This project demonstrates **on-device AI inference** on Android by implementing a complete chat application with:
 
-- **Local Llama-3.2-1B inference** (no internet required)
-- **Multiple quantization levels** (INT8 & FP16)
+- **Multi-model support**: Llama-3.2-1B (English) + YandexGPT-5-Lite-8B (Russian)
+- **Local inference** (no internet required)
+- **Multiple quantization levels** (INT4, INT8 & FP16)
 - **Hardware acceleration** support (CPU, GPU, NPU)
 - **Model selector interface** for performance comparison
 - **Real-time performance metrics** display
-- **Modern Material Design UI** inspired by PocketPal AI
+- **Fixed tokenizer issues** for proper text generation
+- **Modern Material Design UI** with multi-language support
 
 ## ✨ Features
 
 ### 🚀 Model Support
-- **Llama-3.2-1B INT8** (1.39GB) - Optimized for speed and memory efficiency
-- **Llama-3.2-1B FP16** (2.24GB) - Higher precision for better quality
+- **🦙 Llama-3.2-1B INT8** (1.31GB) - English, fast inference with fixed tokenizer
+- **🇷🇺 YandexGPT-5-Lite-8B INT4** (4.9GB) - Russian, 8B parameters, fast
+- **🇷🇺 YandexGPT-5-Lite-8B INT8** (8.4GB) - Russian, 8B parameters, high quality
 - **Runtime model switching** via elegant selector dialog
+- **Language-specific optimization** for English and Russian
 
 ### 🏎️ Backend Support
 - **CPU**: ARM NEON optimized inference
@@ -46,10 +51,11 @@ This project demonstrates **on-device AI inference** on Android by implementing 
 
 ## 📋 Model Details
 
-| Model | Quantization | Size | Performance | Use Case |
-|-------|-------------|------|-------------|----------|
-| Llama-3.2-1B INT8 | 8-bit | 1.39GB | ~8-12 tokens/sec (CPU) | Fast inference, lower memory |
-| Llama-3.2-1B FP16 | 16-bit | 2.24GB | ~6-10 tokens/sec (CPU) | Better quality, more memory |
+| Model | Language | Quantization | Size | Performance | Use Case |
+|-------|----------|-------------|------|-------------|----------|
+| 🦙 Llama-3.2-1B INT8 | English | 8-bit | 1.31GB | ~16 tokens/sec (CPU) | Fast English chat, fixed tokenizer |
+| 🇷🇺 YandexGPT-5-Lite-8B INT4 | Russian | 4-bit | 4.9GB | ~8-12 tokens/sec (CPU) | Large Russian model, fast |
+| 🇷🇺 YandexGPT-5-Lite-8B INT8 | Russian | 8-bit | 8.4GB | ~6-10 tokens/sec (CPU) | Large Russian model, quality |
 
 ### Performance Benchmarks (Galaxy S24 Ultra)
 ```
@@ -187,12 +193,14 @@ my_mnn/
 
 ## 🎯 Key Achievements
 
-✅ **Successfully deployed** 1B parameter Llama model on mobile device  
-✅ **Achieved real-time inference** with ~10+ tokens/sec on CPU  
-✅ **Implemented multi-backend** support (CPU/GPU/NPU)  
-✅ **Created intuitive UI** with model selector and performance metrics  
-✅ **Built complete pipeline** from HuggingFace → MNN → Android  
-✅ **Optimized for Galaxy S24 Ultra** with hardware acceleration  
+✅ **Multi-model deployment**: 1B + 8B parameter models on mobile device  
+✅ **Fixed tokenizer corruption**: Solved base64 encoding issue for proper text generation  
+✅ **Real-time inference**: ~16 tokens/sec (Llama) and ~8-12 tokens/sec (YandexGPT)  
+✅ **Multi-language support**: English (Llama) + Russian (YandexGPT) models  
+✅ **Remote VM integration**: A100 GPU conversion pipeline with cost optimization  
+✅ **Multi-backend support**: CPU/GPU/NPU with performance comparison  
+✅ **Production-ready UI**: Model selector, performance metrics, error handling  
+✅ **Complete pipeline**: HuggingFace → Remote Conversion → MNN → Android  
 
 ## 🔬 Technical Deep Dive
 

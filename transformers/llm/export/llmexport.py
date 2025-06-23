@@ -926,39 +926,65 @@ class LlmExporter(torch.nn.Module):
                 for m in merge_list:
                     fp.write(m)
         else:
-            # tiktoken or bert
-            if 'bert' in type(self.tokenizer).__name__.lower():
-                tokenizer_type = BERT
-            else:
-                tokenizer_type = TIKTOIKEN
-            # bert tokenizer
-            def unicode_to_byte(u: int):
-                if u >= 256 and u <= 288:
-                    return u - 256
-                if u >= 289 and u <= 322:
-                    return u - 162
-                if u == 323:
-                    return 173
-                if u == 65372: # |
-                    return 124
-                if u == 9601:  # _
-                    return 95
-                return u
+            # Handle PreTrainedTokenizerFast (like Llama) and other tokenizers
             vocab = self.tokenizer.get_vocab()
             vocab_list = ['<unk>' for i in range(len(vocab))]
-            for k, v in vocab.items():
-                try:
-                    vocab_list[int(v)] = bytes([unicode_to_byte(ord(c)) for c in k])
-                except:
-                    vocab_list[int(v)] = k.encode('utf-8')
+            
+            # Check if this is a Llama-style tokenizer with direct text tokens
+            if hasattr(self.tokenizer, 'backend_tokenizer') or 'PreTrainedTokenizerFast' in type(self.tokenizer).__name__:
+                # This is likely a Llama/modern HuggingFace tokenizer - use text tokens directly
+                print(f"🔧 Detected {type(self.tokenizer).__name__} - using direct text tokens")
+                for k, v in vocab.items():
+                    vocab_list[int(v)] = k  # Use token as-is (text)
+                
+                with open(file_path, "w", encoding="utf8") as fp:
+                    write_header(fp, HUGGINGFACE, special_list, prefix_list)
+                    fp.write(f'{len(vocab_list)}\n')
+                    for v in vocab_list:
+                        fp.write(v + '\n')  # Write tokens directly as text
+            elif 'bert' in type(self.tokenizer).__name__.lower():
+                # BERT tokenizer - use the original logic
+                tokenizer_type = BERT
+                def unicode_to_byte(u: int):
+                    if u >= 256 and u <= 288:
+                        return u - 256
+                    if u >= 289 and u <= 322:
+                        return u - 162
+                    if u == 323:
+                        return 173
+                    if u == 65372: # |
+                        return 124
+                    if u == 9601:  # _
+                        return 95
+                    return u
+                
+                for k, v in vocab.items():
+                    try:
+                        vocab_list[int(v)] = bytes([unicode_to_byte(ord(c)) for c in k])
+                    except:
+                        vocab_list[int(v)] = k.encode('utf-8')
 
-            special_list = list(self.tokenizer.added_tokens_decoder.keys())
-            with open(file_path, "w", encoding="utf8") as fp:
-                write_header(fp, tokenizer_type, special_list)
-                fp.write(f'{len(vocab_list)}\n')
-                for v in vocab_list:
-                    line = base64.b64encode(v).decode("utf8") + "\n"
-                    fp.write(line)
+                with open(file_path, "w", encoding="utf8") as fp:
+                    write_header(fp, tokenizer_type, special_list)
+                    fp.write(f'{len(vocab_list)}\n')
+                    for v in vocab_list:
+                        line = base64.b64encode(v).decode("utf8") + "\n"
+                        fp.write(line)
+            else:
+                # TIKTOKEN or other tokenizers that need base64 encoding
+                tokenizer_type = TIKTOIKEN
+                for k, v in vocab.items():
+                    try:
+                        vocab_list[int(v)] = k.encode('utf-8')
+                    except:
+                        vocab_list[int(v)] = str(k).encode('utf-8')
+
+                with open(file_path, "w", encoding="utf8") as fp:
+                    write_header(fp, tokenizer_type, special_list)
+                    fp.write(f'{len(vocab_list)}\n')
+                    for v in vocab_list:
+                        line = base64.b64encode(v).decode("utf8") + "\n"
+                        fp.write(line)
         return file_path
 
 

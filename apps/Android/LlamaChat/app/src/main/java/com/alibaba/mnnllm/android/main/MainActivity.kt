@@ -53,20 +53,28 @@ class MainActivity : AppCompatActivity() {
     
     private val availableModels = listOf(
         ModelVariant(
-            name = "Llama-3.2-1B INT8",
-            description = "Optimized for speed and memory efficiency",
-            folderName = "llama-3.2-1b-mnn", 
+            name = "🦙 Llama-3.2-1B INT8",
+            description = "Optimized for Galaxy S24 Ultra with improved sampling",
+            folderName = "llama-3.2-1b-fixed-mnn",
             quantization = "INT8",
-            size = "1.39GB",
-            performance = "Faster inference, lower memory"
+            size = "1.31GB", 
+            performance = "Fast inference + quality text generation"
         ),
         ModelVariant(
-            name = "Llama-3.2-1B FP16", 
-            description = "Higher precision for better quality",
-            folderName = "llama-3.2-1b-fp16-mnn",
-            quantization = "FP16", 
-            size = "2.24GB",
-            performance = "Better quality, more memory"
+            name = "🇷🇺 YandexGPT-5-Lite-8B INT4",
+            description = "Russian language model with 8B parameters (fast)",
+            folderName = "yandex-gpt-5-lite-8b-int4-mnn",
+            quantization = "INT4",
+            size = "4.9GB",
+            performance = "Large model, fast inference"
+        ),
+        ModelVariant(
+            name = "🇷🇺 YandexGPT-5-Lite-8B INT8",
+            description = "Russian language model with 8B parameters (quality)",
+            folderName = "yandex-gpt-5-lite-8b-int8-mnn",
+            quantization = "INT8", 
+            size = "8.4GB",
+            performance = "Large model, high quality"
         )
     )
     
@@ -104,19 +112,24 @@ class MainActivity : AppCompatActivity() {
             🦙 Llama Chat - MNN Inference
             
             Available Models:
-            • Llama-3.2-1B INT8 (1.39GB) - Faster
-            • Llama-3.2-1B FP16 (2.24GB) - Higher Quality
+            • 🦙 Llama-3.2-1B INT8 (1.31GB) - English
+            • 🇷🇺 YandexGPT-5-Lite-8B INT4 (4.9GB) - Russian  
+            • 🇷🇺 YandexGPT-5-Lite-8B INT8 (8.4GB) - Russian
             
             Framework: MNN with native inference
             
+            Optimizations:
+            • Fixed tokenizer for proper text generation
+            • Temperature sampling (0.7) for diversity
+            • Repetition penalty (1.15) for quality
+            • Top-p/Top-k filtering for coherence
+            
             Backends:
             • CPU: ARM NEON optimized
-            • GPU: OpenCL (Adreno)  
-            • NPU: NNAPI (Snapdragon AI Engine)
+            • GPU: OpenCL (Adreno 750)  
+            • NPU: NNAPI (Snapdragon 8 Gen 3 AI Engine)
             
             🔄 Requesting permissions...
-            
-            💡 You'll be able to select your preferred model next
         """.trimIndent()
     }
     
@@ -162,7 +175,7 @@ class MainActivity : AppCompatActivity() {
         val modelNames = availableModels.map { "${it.name}\n${it.description}\nSize: ${it.size}" }.toTypedArray()
         
         val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
-            .setTitle("🦙 Select Llama Model")
+            .setTitle("🤖 Select AI Model")
             .setIcon(R.drawable.ic_launcher)
             .setSingleChoiceItems(modelNames, 0) { _, which ->
                 // Selection is handled in onClick
