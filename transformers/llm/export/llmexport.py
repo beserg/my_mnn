@@ -374,12 +374,18 @@ class LlmExporter(torch.nn.Module):
             'assistant': '{content}'
         }
         if hasattr(self.tokenizer, 'get_chat_template'):
-            template['jinja'] = {}
-            template['jinja']['chat_template'] = self.tokenizer.get_chat_template()
-            if None != self.tokenizer.bos_token:
-                template['jinja']['bos'] = self.tokenizer.bos_token
-            if None != self.tokenizer.eos_token:
-                template['jinja']['eos'] = self.tokenizer.eos_token
+            try:
+                chat_template = self.tokenizer.get_chat_template()
+                if chat_template is not None:
+                    template['jinja'] = {}
+                    template['jinja']['chat_template'] = chat_template
+                    if None != self.tokenizer.bos_token:
+                        template['jinja']['bos'] = self.tokenizer.bos_token
+                    if None != self.tokenizer.eos_token:
+                        template['jinja']['eos'] = self.tokenizer.eos_token
+            except:
+                # Handle missing chat template gracefully
+                pass
         if self.model_type == 'baichuan':
             template['user'] = '<reserved_106>{content}'
             template['assistant'] = '<reserved_107>{content}'

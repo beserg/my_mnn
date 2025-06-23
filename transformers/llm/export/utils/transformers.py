@@ -186,7 +186,7 @@ class Rotary(torch.nn.Module):
         if self.model_type == 'chatglm':
             self.rotary_dim = config.head_dim // 2
         self.theta = 1.0 / (self.rope_theta ** (torch.arange(0, self.rotary_dim, 2, dtype=torch.float32) / self.rotary_dim))
-        if hasattr(config, 'rope_scaling') and config.rope_scaling is not None:
+        if hasattr(config, 'rope_scaling') and config.rope_scaling is not None and 'mrope_section' in config.rope_scaling:
             self.mrope_section = config.rope_scaling['mrope_section']
             self.theta_sections = self.theta.unsqueeze(0).split(self.mrope_section, dim=-1)
         else:

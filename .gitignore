@@ -1,4 +1,3 @@
-
 # Created by https://www.gitignore.io/api/python,cmake,xcode,androidstudio
 # Edit at https://www.gitignore.io/?templates=python,cmake,xcode,androidstudio
 
@@ -376,3 +375,62 @@ datasets/*
 
 # qnn 3rdParty
 source/backend/qnn/3rdParty/include
+
+# Large model files (too big for git)
+models/
+*.mnn
+*.weight
+*.safetensors
+*.onnx
+
+# Sensitive files
+hugging_key
+*token*
+*.key
+
+# Build artifacts
+build/
+*.apk
+*.so
+*.a
+
+# Downloaded models and cache
+transformers/llm/export/models/
+.cache/
+
+# Android specific
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv
+pip-log.txt
+pip-delete-this-directory.txt
+
+# IDE
+.vscode/
+*.swp
+*.swo
+*~
+
+# Log files
+*.log
